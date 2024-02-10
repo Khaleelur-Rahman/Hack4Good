@@ -102,13 +102,6 @@ def create_survey(call):
             "options": ["Yes", "No"],
             "type": "regular"
         },
-        {
-            "survey_id": "kjasdijdfdah!!@@@@jo",
-            "event_id": "2",
-            "question": "Open Ended Questions",
-            "options": [],
-            "type": "open_ended"
-        },
     ]
 
     for p in sample_survey_data:
@@ -119,26 +112,13 @@ def create_survey(call):
 
         if curr_event_id == event_id:
             # MUST ALSO CHECK IF THEY HAVE NOT ATTEMPTED A QUIZ --> Check by fetching quiz_answer table ?
-            if q_type == 'open_ended':
-                print(question)
-                print(q_type)
-                keyboard = InlineKeyboardMarkup()
-                keyboard.add(InlineKeyboardButton(text="Submit Answer", callback_data=f"open_{p['survey_id']}"))
-                bot.send_message(chat_id, question)
-            else:
-                bot.send_poll(chat_id, question=question, options=options, type=q_type, is_anonymous=False)
+            bot.send_poll(chat_id, question=question, options=options, type=q_type, is_anonymous=False)
 
 
 @bot.poll_answer_handler()
 def handle_answer(ans):
     print("Poll id: ", ans.poll_id)
     print("Poll Ans Object : ", ans.option_ids)
-
-
-@bot.message_handler(func=lambda message: message.reply_to_message and message.reply_to_message.from_user.is_bot)
-def handle_open_ended_answer(message):
-    answer = message.text
-    print("Answer : ", answer)
 
 
 def get_user_events(user_id):
